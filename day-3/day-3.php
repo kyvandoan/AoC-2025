@@ -3,21 +3,22 @@ $puzzleInput = file('input.txt');
 $totalJoltage = 0;
 
 foreach ($puzzleInput as $batteryBank) {
-    $batteriesJoltage = str_split($batteryBank);
+    $batteries = str_split(trim($batteryBank));
+    $currentMax = 0;
 
-    $firstHighestJoltage = max($batteriesJoltage);
-    $firstHighestJoltageIndex = array_search($firstHighestJoltage, $batteriesJoltage);
-
-    $remainingBatteries = array_slice($batteriesJoltage, $firstHighestJoltageIndex + 1);
-    if (!empty($remainingBatteries)) {
-        $secondHighestJoltage = max($remainingBatteries);
-    } else {
-        $secondHighestJoltage = 0;
+    foreach ($batteries as $firstIndex => $firstDigit) {
+        foreach ($batteries as $secondIndex => $secondDigit) {
+            if ($secondIndex > $firstIndex) {
+                $joltage = intval($firstDigit . $secondDigit);
+                
+                if ($joltage > $currentMax) {
+                    $currentMax = $joltage;
+                }
+            }
+        }
     }
 
-    $totalJoltage = $totalJoltage + intval($firstHighestJoltage . $secondHighestJoltage);
-
-    var_dump($totalJoltage);
+    $totalJoltage = $totalJoltage + $currentMax;
 }
 
 print "Total Output Joltage: " . $totalJoltage;
